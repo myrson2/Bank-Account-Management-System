@@ -8,7 +8,7 @@ public class SavingsAccount extends Account{
 
     public SavingsAccount(User owner, BigDecimal balance){
         super(owner, balance);
-        this.interestRate = calculateInterest();
+        this.interestRate = getInterestRate();
         }
 
     @Override
@@ -23,11 +23,14 @@ public class SavingsAccount extends Account{
     public BigDecimal withdraw(double amount) {
         BigDecimal withdraw = new BigDecimal(amount);
         
-        if(withdraw.compareTo(getBalance()) < 0){
+        if(balance.compareTo(withdraw) < 0){
             System.out.println("Error...");
             return null;
         }
-        return withdraw.subtract(balance);
+
+        balance = balance.subtract(withdraw);
+        
+        return balance;
     }
 
     @Override
@@ -36,14 +39,13 @@ public class SavingsAccount extends Account{
     }
 
     public double getInterestRate() {
-        return interestRate;
+        return calculateInterest();
     }
 
     public double calculateInterest(){
-         double balance = getBalance().doubleValue();
+        double balance = getBalance().doubleValue();
 
         double interest = balance * .02;
-        
         return balance + interest;
     }
 }

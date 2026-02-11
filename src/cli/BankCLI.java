@@ -23,6 +23,7 @@ public class BankCLI {
                 case 1 -> createAccount();
                 case 2 -> openAccount();
                 case 3 -> deposit();
+                case 4 -> withdraw();
                 case 6 -> viewAccountDetails();
                 // case 4 -> withdraw();
                 case 0 -> {
