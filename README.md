@@ -32,40 +32,6 @@ Domain Model (Pure Objects)
 
 ---
 
-## 📦 Package Structure
-
-```
-com.bank
-├── app
-│   └── BankApplication.java
-│
-├── cli
-│   └── BankCLI.java
-│
-├── model
-│   ├── User.java
-│   ├── Account.java
-│   ├── SavingsAccount.java
-│   ├── CurrentAccount.java
-│   ├── Transaction.java
-│   └── TransactionType.java
-│
-├── service
-│   ├── AccountService.java
-│   ├── TransferService.java
-│   └── TransactionService.java
-│
-├── exception
-│   ├── InsufficientFundsException.java
-│   ├── InvalidAccountException.java
-│   └── IllegalOperationException.java
-│
-└── util
-    └── InputValidator.java
-```
-
----
-
 ## 🧠 Package Responsibilities
 
 ### 1️⃣ app
@@ -338,6 +304,44 @@ This layer coordinates objects and enforces business rules.
 * Filter transactions by date
 * Filter transactions by type
 * Calculate total deposits / withdrawals
+
+---
+# 📁 Project File Structure
+
+```
+com.bank
+├── app
+│   └── BankApplication.java
+│
+├── cli
+│   └── BankCLI.java
+│
+├── model
+│   ├── user
+│   │   └── User.java
+│   │
+│   ├── account
+│   │   ├── Account.java
+│   │   ├── SavingsAccount.java
+│   │   └── CurrentAccount.java
+│   │
+│   └── transaction
+│       ├── Transaction.java
+│       └── TransactionType.java
+│
+├── service
+│   ├── AccountService.java
+│   ├── TransferService.java
+│   └── TransactionService.java
+│
+├── exception
+│   ├── InsufficientFundsException.java
+│   ├── InvalidAccountException.java
+│   └── IllegalOperationException.java
+│
+└── util
+    └── InputValidator.java
+```
 
 ---
 

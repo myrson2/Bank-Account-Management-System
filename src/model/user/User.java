@@ -1,4 +1,4 @@
-package model;
+package model.user;
 
 import java.util.Random;
 
@@ -13,6 +13,12 @@ public class User {
         this.fullName = fullName;
         this.email = email;
         this.id = idGenerator();
+    }
+
+    public User(String fullName, String email, String id){
+        this.fullName = fullName;
+        this.email = email;
+        this.id = id;
     }
 
     // Getters

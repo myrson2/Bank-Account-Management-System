@@ -1,7 +1,10 @@
 package cli;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
-import model.User;
+
+import model.user.User;
+import model.account.*;
 
 public class BankCLI {
     private static Scanner scanner = new Scanner(System.in);
@@ -18,6 +21,9 @@ public class BankCLI {
 
             switch (select) {
                 case 1 -> createAccount();
+                case 2 -> openAccount();
+                case 3 -> deposit();
+                case 4 -> withdraw();
                 case 0 -> {
                     System.out.println("System closing...");
                     System.out.print("(Enter to close)");
@@ -44,16 +50,56 @@ public class BankCLI {
     }
 
     public static User createAccount(){
-        System.out.println("Full Name: ");
+        System.out.print("Full Name: ");
         String name = scanner.nextLine();
 
-        System.out.println("Email: ");
+        System.out.print("Email: ");
         String email = scanner.nextLine();
 
         user = new User(name, email);
-
-        System.out.println("Your id: " + user.idGenerator());
+        System.out.println("Your id: " + user.getId());
+        
         return user;   
+    }
+
+    public static void openAccount(){
+        System.out.printf("""
+               -- Open Account --
+               1. Savings Account
+               2. Current Account
+                """
+            );
+
+        System.out.println("Select > ");
+        int select = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.println("Initial Deposit: ");
+        int initDeposit = scanner.nextInt();
+        scanner.nextLine();
+        
+        switch (select) {
+            case 1 -> {
+                SavingsAccount savingsAccount = new SavingsAccount(user, new BigDecimal(initDeposit));
+            }
+            case 2 -> {
+                CurrentAccount currentAccount = new CurrentAccount(user, new BigDecimal(initDeposit));
+            }
+            
+        }
+
+
+        System.out.printf("""
+                !! Savings Account Added Successfully.
+                    Account Number: %s
+                    Owner: %s
+                    Balance: P%.2lf
+                """);
+    }
+
+    public static void deposit(){
+        System.out.println("Enter Amount: ");
+        
     }
 }
 
