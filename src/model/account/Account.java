@@ -12,14 +12,14 @@ public abstract class Account {
     private Random random = new Random();
     private String accountNumber;
     private User owner;
-    private BigDecimal balance;
+    protected BigDecimal balance;
     private ArrayList<Transaction> transactions;
 
-    public Account(User owner, BigDecimal balance){
+    public Account(User owner, BigDecimal initialBalance){
         this.accountNumber = accNumberGenerator();
         this.owner = owner;
         this.transactions = new ArrayList<>();
-        this.balance = balance;
+        this.balance = initialBalance;
     }
 
     public String getAccountNumber() {

@@ -32,8 +32,7 @@ public class CurrentAccount extends Account{
 
     @Override
     public BigDecimal getBalance() {
-        BigDecimal balance = new BigDecimal(0); // default 0
-        
         return balance;
     }
+
 }

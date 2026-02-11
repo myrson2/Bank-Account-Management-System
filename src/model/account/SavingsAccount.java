@@ -4,17 +4,19 @@ import java.math.BigDecimal;
 import model.user.User;
 
 public class SavingsAccount extends Account{
-    // private double interestRate;
+    private double interestRate;
 
-    public SavingsAccount(User owner,  BigDecimal balance){
+    public SavingsAccount(User owner, BigDecimal balance){
         super(owner, balance);
-    }
+        this.interestRate = calculateInterest();
+        }
 
     @Override
     public BigDecimal deposit(double amount) {
         BigDecimal deposit = new BigDecimal(amount);
+        balance = deposit.add(balance);
 
-        return deposit.add(getBalance());
+        return balance;
     }
 
     @Override
@@ -25,13 +27,23 @@ public class SavingsAccount extends Account{
             System.out.println("Error...");
             return null;
         }
-        return withdraw.subtract(getBalance());
+        return withdraw.subtract(balance);
     }
 
-    // @Override
-    // public BigDecimal getBalance() {
-    //     // default 0
+    @Override
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public double getInterestRate() {
+        return interestRate;
+    }
+
+    public double calculateInterest(){
+         double balance = getBalance().doubleValue();
+
+        double interest = balance * .02;
         
-    //     return balance;
-    // }
+        return balance + interest;
+    }
 }
