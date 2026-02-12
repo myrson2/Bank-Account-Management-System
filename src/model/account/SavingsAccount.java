@@ -13,7 +13,7 @@ public class SavingsAccount extends Account{
 
     @Override
     public BigDecimal deposit(double amount) {
-        BigDecimal deposit = new BigDecimal(amount);
+        BigDecimal deposit = BigDecimal.valueOf(amount);
         balance = deposit.add(balance);
 
         return balance;
@@ -21,7 +21,7 @@ public class SavingsAccount extends Account{
 
     @Override
     public BigDecimal withdraw(double amount) {
-        BigDecimal withdraw = new BigDecimal(amount);
+        BigDecimal withdraw = BigDecimal.valueOf(amount);
         
         if(balance.compareTo(withdraw) < 0){
             System.out.println("Error...");
@@ -46,6 +46,9 @@ public class SavingsAccount extends Account{
         double balance = getBalance().doubleValue();
 
         double interest = balance * .02;
-        return balance + interest;
+
+        interestRate = balance + interest;
+        
+        return this.interestRate;
     }
 }

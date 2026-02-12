@@ -24,8 +24,9 @@ public class BankCLI {
                 case 2 -> openAccount();
                 case 3 -> deposit();
                 case 4 -> withdraw();
+                case 5 -> System.out.println("Transfer");
                 case 6 -> viewAccountDetails();
-                // case 4 -> withdraw();
+                case 7 -> viewTransactionHistory();
                 case 0 -> {
                     System.out.println("System closing...");
                     System.out.print("(Enter to close)");
@@ -149,7 +150,7 @@ public class BankCLI {
 
         for (Account acc : user.getAccounts()) {
             if(choice == 1 && acc instanceof SavingsAccount) acc.deposit(amount);
-            if(choice == 1 && acc instanceof CurrentAccount) acc.deposit(amount);
+            if(choice == 2 && acc instanceof CurrentAccount) acc.deposit(amount);
         }
     }
 
@@ -170,7 +171,7 @@ public class BankCLI {
 
         for (Account acc : user.getAccounts()) {
             if(choice == 1 && acc instanceof SavingsAccount) acc.withdraw(amount);
-            if(choice == 1 && acc instanceof CurrentAccount) acc.withdraw(amount);
+            if(choice == 2 && acc instanceof CurrentAccount) acc.withdraw(amount);
         }
     }
 
@@ -189,35 +190,40 @@ public class BankCLI {
         return;
     }
 
-    for (Account acc : user.getAccounts()) {
+        for (Account acc : user.getAccounts()) {
 
-        if (acc instanceof SavingsAccount savings) {
-            System.out.printf("""
-                    [Savings Account]
-                    Account Number: %s
-                    Balance: %s
-                    Interest Rate: %.2f
-                    ---------------------
-                    """,
-                    savings.getAccountNumber(),
-                    savings.getBalance(),
-                    savings.getInterestRate()
-            );
-        }
+            if (acc instanceof SavingsAccount savings) {
+                System.out.printf("""
+                        [Savings Account]
+                        Account Number: %s
+                        Balance: %.2f
+                        Interest Rate: %.2f
+                        ---------------------
+                        """,
+                        savings.getAccountNumber(),
+                        savings.getBalance(),
+                        savings.getInterestRate()
+                );
+            }
 
-        else if (acc instanceof CurrentAccount current) {
-            System.out.printf("""
-                    [Current Account]
-                    Account Number: %s
-                    Balance: %s
-                    Overdraft Limit: 
-                    ---------------------
-                    """,
-                    current.getAccountNumber(),
-                    current.getBalance()
-            );
+            else if (acc instanceof CurrentAccount current) {
+                System.out.printf("""
+                        [Current Account]
+                        Account Number: %s
+                        Balance: %s
+                        Overdraft Limit: %.2f
+                        ---------------------
+                        """,
+                        current.getAccountNumber(),
+                        current.getBalance(),
+                        current.getOverdraftLimit()
+                );
+            }
         }
     }
+
+    public void viewTransactionHistory(){
+        return;
     }
 }
 
