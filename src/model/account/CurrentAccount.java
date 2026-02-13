@@ -13,6 +13,10 @@ public class CurrentAccount extends Account{
 
     @Override
     public BigDecimal deposit(double amount) {
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
+            overdraftLimit = overdraftLimit.add(balance).abs();   
+        }
+
         BigDecimal deposit = BigDecimal.valueOf(amount);
         balance = deposit.add(balance);
 
@@ -20,26 +24,24 @@ public class CurrentAccount extends Account{
     }
 
     @Override
-    // Assuming this is part of a class with fields: private BigDecimal balance; private BigDecimal overdraftLimit;
-
-public BigDecimal withdraw(double amount) {
-    BigDecimal totalAvailable = balance.add(overdraftLimit);
-    BigDecimal withdrawAmount = BigDecimal.valueOf(amount);  // Convert double to BigDecimal for precision
-    
-    if (withdrawAmount.compareTo(totalAvailable) <= 0) {  // Allow withdrawals up to totalAvailable
-        balance = balance.subtract(withdrawAmount);
+    public BigDecimal withdraw(double amount) {
+        BigDecimal totalAvailable = balance.add(overdraftLimit);
+        BigDecimal withdrawAmount = BigDecimal.valueOf(amount);  // Convert double to BigDecimal for precision
         
-        BigDecimal usedOverdraft = BigDecimal.ZERO;
-        if (balance.compareTo(BigDecimal.ZERO) < 0) {
-            usedOverdraft = balance.abs();  // How much overdraft is used
-            overdraftLimit = overdraftLimit.subtract(usedOverdraft);
+        if (withdrawAmount.compareTo(totalAvailable) <= 0) {  // Allow withdrawals up to totalAvailable
+            balance = balance.subtract(withdrawAmount);
+            
+            BigDecimal usedOverdraft = BigDecimal.ZERO;
+            if (balance.compareTo(BigDecimal.ZERO) < 0) {
+                usedOverdraft = balance.abs();  // How much overdraft is used
+                overdraftLimit = overdraftLimit.subtract(usedOverdraft);
+            }
+        } else {
+        System.out.println("Not Allowed. Insufficient Amount.");
         }
-    } else {
-       System.out.println("Not Allowed. Insufficient Amount.");
+        
+        return balance;
     }
-    
-    return balance;
-}
 
     @Override
     public BigDecimal getBalance() {

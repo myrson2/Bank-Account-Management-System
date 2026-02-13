@@ -8,4 +8,6 @@ public class Transaction {
     private BigDecimal amount;
     private LocalDateTime timestamp;
     private String description;
+
+    
 }

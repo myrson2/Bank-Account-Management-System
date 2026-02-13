@@ -1,8 +1,6 @@
 package model.user;
 
-import java.util.ArrayList;
 import java.util.Random;
-import model.account.Account;
 
 public class User {
     private static Random random = new Random();
@@ -10,8 +8,6 @@ public class User {
     private String id;
     private String fullName;
     private String email;
-
-    private ArrayList<Account> accounts = new ArrayList<>();
 
     public User(String fullName, String email){
         this.fullName = fullName;
@@ -32,10 +28,6 @@ public class User {
         return id;
     }
 
-    public ArrayList<Account> getAccounts() {
-        return accounts;
-    }
-
     public String idGenerator(){
         char letter = (char) ('A' + random.nextInt(26));
         int numbers = random.nextInt(10000);
@@ -46,10 +38,4 @@ public class User {
 
         return idString;
     }
-
-    public void addAccount(Account acc){
-        accounts.add(acc);
-        System.out.println("Added Account.");
-    }
-
 }

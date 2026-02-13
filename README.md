@@ -1,46 +1,59 @@
+Here’s a cleaner, more readable version of your specification formatted as a polished Markdown document.
+
+---
+
 # 🏦 Bank Account Management System
 
 ## 📘 Pure Object-Oriented Design Specification
 
-This document defines the **complete system design** of the Bank Account Management System implemented using **Core Java OOP concepts only**, with **no database, JDBC, or external persistence**. The focus is on **object modeling, business rules, polymorphism, and defensive programming**.
+This document defines the **complete design blueprint** of the **Bank Account Management System**, implemented using **Core Java Object-Oriented Programming (OOP) principles only**.
 
-This version is intentionally designed as a **clean OOP foundation** that can later be extended with persistence (JDBC / JPA) without refactoring the core domain.
+> ⚠️ **Scope Constraint:**
+> No database, JDBC, file storage, frameworks, or external persistence mechanisms.
+> The focus is strictly on **object modeling, business rules, polymorphism, and defensive programming**.
 
----
-
-## 🎯 System Goals
-
-* Master Object-Oriented Programming fundamentals
-* Model real-world banking behavior accurately
-* Prevent illegal object states
-* Use clean separation of responsibilities
-* Emphasize logic and design over infrastructure
+This system is intentionally designed as a **pure OOP foundation**, allowing future integration of persistence technologies **without refactoring the domain model**.
 
 ---
 
-## 🧱 High-Level Architecture (OOP Only)
+## 🎯 System Objectives
+
+✔ Master Java OOP fundamentals
+✔ Model realistic banking behaviors
+✔ Enforce valid object states
+✔ Maintain clean separation of concerns
+✔ Prioritize design & logic over infrastructure
+
+---
+
+## 🧱 High-Level Architecture
 
 ```
 CLI Layer (User Interaction)
         ↓
-Service Layer (Business Rules)
+Service Layer (Business Logic)
         ↓
 Domain Model (Pure Objects)
 ```
 
-⚠️ No database, no files, no frameworks
+**Key Principle:**
+Each layer has a **single responsibility** and does not leak concerns into others.
 
 ---
 
-## 🧠 Package Responsibilities
+## 📦 Package Responsibilities
 
-### 1️⃣ app
+---
 
-**Purpose:** System entry point
+### 1️⃣ `app` – Application Entry Point
 
-* Starts the application
-* Initializes core services
-* Launches CLI
+**Purpose:** Bootstraps the system
+
+**Responsibilities:**
+
+* Start the application
+* Initialize services
+* Launch CLI interface
 
 **Key Class:**
 
@@ -48,40 +61,40 @@ Domain Model (Pure Objects)
 
 ---
 
-### 2️⃣ cli (Controller Layer)
+### 2️⃣ `cli` – User Interaction Layer
 
-**Purpose:** User interaction only
+**Purpose:** Handles input/output only
 
 **Responsibilities:**
 
 * Display menus
-* Read input from user
-* Call service layer methods
-* Catch and display exceptions
+* Read user input
+* Invoke service methods
+* Catch & display exceptions
 
 **Key Class:**
 
 * `BankCLI`
 
-**Functions Provided:**
+**Supported Actions:**
 
 * Create user
 * Open account
-* Deposit
-* Withdraw
-* Transfer
+* Deposit funds
+* Withdraw funds
+* Transfer funds
 * View account details
 * View transaction history
 
 ---
 
-### 3️⃣ model (Domain Layer)
+### 3️⃣ `model` – Domain Layer (Core Business Objects)
 
-This package contains **pure business objects** with no external dependencies.
+Contains **pure OOP classes** with **no infrastructure dependencies**.
 
 ---
 
-#### User
+#### 👤 `User`
 
 **Description:** Represents a bank customer
 
@@ -93,13 +106,13 @@ This package contains **pure business objects** with no external dependencies.
 
 **Rules:**
 
-* Email must be unique within the system
+* Email must be unique
 
 ---
 
-#### Account (Abstract Class)
+#### 🏦 `Account` (Abstract Base Class)
 
-**Description:** Base abstraction for all account types
+**Description:** Base abstraction for all accounts
 
 **Fields:**
 
@@ -116,44 +129,40 @@ This package contains **pure business objects** with no external dependencies.
 
 **Invariants:**
 
-* Balance must never be invalid for the account type
-* All balance changes must create a transaction
+* Balance must always remain valid
+* Every balance change creates a transaction
 
 ---
 
-#### SavingsAccount
+#### 💰 `SavingsAccount`
 
-**Description:** Standard savings account
-
-**Additional Fields:**
+**Additional Field:**
 
 * `interestRate : double`
 
 **Rules:**
 
-* Withdrawals cannot exceed balance
-* Interest calculation is supported
+* Cannot withdraw beyond available balance
+* Supports interest calculation
 
 ---
 
-#### CurrentAccount
+#### 💳 `CurrentAccount`
 
-**Description:** Account with overdraft support
-
-**Additional Fields:**
+**Additional Field:**
 
 * `overdraftLimit : BigDecimal`
 
 **Rules:**
 
-* Balance may go negative up to overdraft limit
-* Withdrawals beyond limit are forbidden
+* Balance may go negative
+* Cannot exceed overdraft limit
 
 ---
 
-#### Transaction
+#### 🧾 `Transaction`
 
-**Description:** Immutable record of a balance change
+**Description:** Immutable balance record
 
 **Fields:**
 
@@ -164,11 +173,11 @@ This package contains **pure business objects** with no external dependencies.
 
 **Rules:**
 
-* Transactions cannot be modified after creation
+* Cannot be modified after creation
 
 ---
 
-#### TransactionType (Enum)
+#### 🔖 `TransactionType` (Enum)
 
 ```
 DEPOSIT
@@ -178,20 +187,25 @@ TRANSFER
 
 ---
 
-### 4️⃣ service (Business Logic Layer)
+### 4️⃣ `service` – Business Logic Layer
 
-This layer coordinates objects and enforces business rules.
+Coordinates domain objects and enforces rules.
 
 ---
 
-#### AccountService
+#### ⚙️ `AccountService`
 
 **Responsibilities:**
 
 * Create users
 * Open accounts
-* Handle deposits and withdrawals
-* Validate all operations
+* Handle deposits & withdrawals
+* Validate business operations
+
+**Core Fields:**
+
+* `List<User> users`
+* `List<Account> accounts`
 
 **Key Methods:**
 
@@ -200,113 +214,124 @@ This layer coordinates objects and enforces business rules.
 * `openCurrentAccount()`
 * `deposit()`
 * `withdraw()`
+* `findAccountByNumber()`
 
 ---
 
-#### TransferService
+#### 🔁 `TransferService`
 
 **Responsibilities:**
 
 * Transfer funds between accounts
-* Ensure atomicity at object level
+* Maintain logical consistency
 
-**Transfer Logic:**
+**Transfer Workflow:**
 
-1. Validate both accounts
+1. Validate accounts
 2. Withdraw from source
 3. Deposit to destination
-4. Roll back manually if failure occurs
+4. Rollback manually if failure occurs
+
+**Key Methods:**
+
+* `transfer(source, target, amount)`
 
 ---
 
-#### TransactionService
+#### 📊 `TransactionService`
 
 **Responsibilities:**
 
 * Retrieve transaction history
-* Filter transactions using Java Streams
+* Apply filters via Streams API
 
-**Examples:**
+**Example Methods:**
 
-* Transactions by date range
-* Transactions by type
-
----
-
-### 5️⃣ exception
-
-**Purpose:** Prevent illegal system states
-
-| Exception                  | When Thrown                      |
-| -------------------------- | -------------------------------- |
-| InsufficientFundsException | Withdrawal exceeds allowed funds |
-| InvalidAccountException    | Account does not exist           |
-| IllegalOperationException  | Invalid business action          |
+* `getTransactionsByType()`
+* `getTransactionsByDateRange()`
+* `calculateTotalDeposits()`
 
 ---
 
-### 6️⃣ util
+### 5️⃣ `exception` – Domain Safety Layer
 
-#### InputValidator
+Prevents illegal system states.
+
+| Exception                    | Trigger Condition                |
+| ---------------------------- | -------------------------------- |
+| `InsufficientFundsException` | Withdrawal exceeds allowed funds |
+| `InvalidAccountException`    | Account not found                |
+| `IllegalOperationException`  | Invalid business rule violation  |
+
+---
+
+### 6️⃣ `util` – Utility Layer
+
+---
+
+#### ✅ `InputValidator`
 
 **Responsibilities:**
 
-* Validate monetary values
-* Validate text input
-* Centralize validation logic
+* Validate monetary inputs
+* Validate text inputs
+* Centralize reusable validations
 
 ---
 
 ## 🔄 Core Functionalities
 
+---
+
 ### 👤 User Creation
 
-* Validate unique email
-* Instantiate `User` object
+✔ Validate unique email
+✔ Instantiate User
 
 ---
 
 ### 🏦 Account Creation
 
-* Generate unique account number
-* Assign owner
-* Enforce valid initial balance
+✔ Generate unique account number
+✔ Assign owner
+✔ Enforce valid initial balance
 
 ---
 
 ### 💰 Deposit
 
-* Amount must be positive
-* Balance updated
-* Transaction recorded
+✔ Amount must be positive
+✔ Update balance
+✔ Record transaction
 
 ---
 
 ### 💸 Withdrawal
 
-* Enforce account-specific rules
-* Throw exception on failure
-* Transaction recorded
+✔ Enforce account rules
+✔ Throw exception if invalid
+✔ Record transaction
 
 ---
 
 ### 🔁 Transfer
 
-* Withdraw from source
-* Deposit to destination
-* Create two transaction records
-* Maintain consistency
+✔ Withdraw from source
+✔ Deposit to target
+✔ Record dual transactions
+✔ Maintain consistency
 
 ---
 
 ### 📊 Analytics (Streams API)
 
-* Filter transactions by date
-* Filter transactions by type
-* Calculate total deposits / withdrawals
+✔ Filter by date
+✔ Filter by type
+✔ Aggregate totals
 
 ---
-# 📁 Project File Structure
+
+## 📁 Project Structure
 
 ```
 com.bank
@@ -345,37 +370,39 @@ com.bank
 
 ---
 
-## 🛡️ OOP Principles Enforced
+## 🛡️ Enforced OOP Principles
 
-* **Encapsulation:** Private fields, controlled methods
-* **Abstraction:** Abstract account behavior
-* **Polymorphism:** Same operations, different rules
-* **Composition:** Account owns transactions
-* **Single Responsibility:** Each class has one reason to change
+✔ **Encapsulation** – Private fields & controlled mutations
+✔ **Abstraction** – Common account behavior
+✔ **Polymorphism** – Different rules, same interface
+✔ **Composition** – Accounts own transactions
+✔ **Single Responsibility** – One reason to change per class
 
 ---
 
 ## ✅ Completion Criteria
 
-The system is complete when:
+The system is considered complete when:
 
-* All business rules are enforced
-* No illegal state is possible
-* Code is readable and extensible
-* Behavior matches real banking logic
+✔ All business rules are enforced
+✔ No illegal state is possible
+✔ Code is readable & extensible
+✔ Behavior reflects real banking logic
 
 ---
 
 ## 🚀 Future Extension Path
 
-This design allows easy extension to:
+This architecture supports seamless upgrades:
 
-* JDBC persistence
-* Spring Boot REST APIs
-* JPA/Hibernate
+* JDBC Persistence
+* Spring Boot REST API
+* JPA / Hibernate
 
-**No changes required in the domain layer.**
+> ✅ **No domain model refactoring required**
 
 ---
 
-**This document represents a clean, professional OOP-only system design.**
+**This document represents a clean, extensible, OOP-only system design.**
+
+---

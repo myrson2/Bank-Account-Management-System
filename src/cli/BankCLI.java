@@ -5,10 +5,12 @@ import java.util.Scanner;
 
 import model.user.User;
 import model.account.*;
+import model.service.AccountService;
 
 public class BankCLI {
     private static Scanner scanner = new Scanner(System.in);
     private static User user;
+    private static AccountService accountService = new AccountService();
     
     public void start(){
         boolean running = true;
@@ -20,13 +22,13 @@ public class BankCLI {
             scanner.nextLine();
 
             switch (select) {
-                case 1 -> createAccount();
+                case 1 -> createAccount(); 
                 case 2 -> openAccount();
                 case 3 -> deposit();
                 case 4 -> withdraw();
-                case 5 -> System.out.println("Transfer");
+                // case 5 -> transfer();
                 case 6 -> viewAccountDetails();
-                case 7 -> viewTransactionHistory();
+                // case 7 -> viewTransactionHistory();
                 case 0 -> {
                     System.out.println("System closing...");
                     System.out.print("(Enter to close)");
@@ -52,7 +54,7 @@ public class BankCLI {
         """);
     }
 
-    public static User createAccount(){
+    public static void createAccount(){
         System.out.print("Full Name: ");
         String name = scanner.nextLine();
 
@@ -62,7 +64,10 @@ public class BankCLI {
         user = new User(name, email);
         System.out.println("Your id: " + user.getId());
         
-        return user;   
+        user = new User(name, email);
+
+        accountService.createUser(user);
+        System.out.println();
     }
 
     public static void openAccount(){
@@ -83,7 +88,7 @@ public class BankCLI {
         int select = scanner.nextInt();
         scanner.nextLine();
 
-        for (Account acc  : user.getAccounts()) {
+        for (Account acc  : accountService.getAccounts()) {
             if (select == 1 && acc instanceof SavingsAccount) {
                 System.out.println("You already have an account for this account");
                 return;
@@ -114,7 +119,7 @@ public class BankCLI {
                     savings.getInterestRate()
                         );
 
-                    user.addAccount(savings);
+                    accountService.openSavingsAccount(savings);
             }
             case 2 -> {
                 CurrentAccount current = new CurrentAccount(user, new BigDecimal(initDeposit));
@@ -128,7 +133,7 @@ public class BankCLI {
                         current.getOwner().getFullName(), 
                         current.getBalance());
 
-                    user.addAccount(current);
+                    accountService.openCurrentAccount(current);
             }
         }
     }
@@ -148,7 +153,7 @@ public class BankCLI {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        for (Account acc : user.getAccounts()) {
+        for (Account acc : accountService.getAccounts()) {
             if(choice == 1 && acc instanceof SavingsAccount) acc.deposit(amount);
             if(choice == 2 && acc instanceof CurrentAccount) acc.deposit(amount);
         }
@@ -169,7 +174,7 @@ public class BankCLI {
         int choice = scanner.nextInt();
         scanner.nextLine();
 
-        for (Account acc : user.getAccounts()) {
+        for (Account acc : accountService.getAccounts()) {
             if(choice == 1 && acc instanceof SavingsAccount) acc.withdraw(amount);
             if(choice == 2 && acc instanceof CurrentAccount) acc.withdraw(amount);
         }
@@ -185,12 +190,12 @@ public class BankCLI {
                 """, user.getId(), user.getFullName(), user.getEmail()
         );
 
-           if (user.getAccounts().isEmpty()) {
+           if (accountService.getAccounts().isEmpty()) {
         System.out.println("No accounts available.");
         return;
     }
 
-        for (Account acc : user.getAccounts()) {
+        for (Account acc : accountService.getAccounts()) {
 
             if (acc instanceof SavingsAccount savings) {
                 System.out.printf("""
@@ -222,8 +227,12 @@ public class BankCLI {
         }
     }
 
-    public void viewTransactionHistory(){
-        return;
-    }
+    // public void viewTransactionHistory(){
+    //     return;
+    // }
+
+    // public void transfer(){
+        
+    // }
 }
 
