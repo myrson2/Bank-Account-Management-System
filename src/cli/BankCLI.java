@@ -6,11 +6,15 @@ import java.util.Scanner;
 import model.user.User;
 import model.account.*;
 import model.service.AccountService;
+import model.service.TransactionService;
+import model.transaction.Transaction;
+import model.transaction.TransactionType;
 
 public class BankCLI {
     private static Scanner scanner = new Scanner(System.in);
     private static User user;
     private static AccountService accountService = new AccountService();
+    private static TransactionService transactionService = new TransactionService();
     
     public void start(){
         boolean running = true;
@@ -28,7 +32,7 @@ public class BankCLI {
                 case 4 -> withdraw();
                 // case 5 -> transfer();
                 case 6 -> viewAccountDetails();
-                // case 7 -> viewTransactionHistory();
+                case 7 -> viewTransactionHistory();
                 case 0 -> {
                     System.out.println("System closing...");
                     System.out.print("(Enter to close)");
@@ -66,8 +70,8 @@ public class BankCLI {
         
         user = new User(name, email);
 
-        accountService.createUser(user);
-        System.out.println();
+        User created = accountService.createUser(user);
+        System.out.printf("Hi %s! Welcome to our bank!\n", created.getFullName());
     }
 
     public static void openAccount(){
@@ -102,6 +106,8 @@ public class BankCLI {
         System.out.print("Initial Deposit: ");
         int initDeposit = scanner.nextInt();
         scanner.nextLine();
+
+        String typeAccount = "";
         
         switch (select) {
             case 1 -> {
@@ -118,8 +124,9 @@ public class BankCLI {
                     savings.getBalance(),
                     savings.getInterestRate()
                         );
-
+                    
                     accountService.openSavingsAccount(savings);
+                    typeAccount = "Savings Account";
             }
             case 2 -> {
                 CurrentAccount current = new CurrentAccount(user, new BigDecimal(initDeposit));
@@ -134,8 +141,14 @@ public class BankCLI {
                         current.getBalance());
 
                     accountService.openCurrentAccount(current);
+                    typeAccount = "Current Account";
             }
         }
+
+        String description = "Placed Initial Balance in " + typeAccount + ".";
+        TransactionType type = TransactionType.DEPOSIT;
+
+        transactionService.addTransaction(new Transaction(type, new BigDecimal(initDeposit), description));
     }
 
     public static void deposit(){
@@ -157,6 +170,11 @@ public class BankCLI {
             if(choice == 1 && acc instanceof SavingsAccount) acc.deposit(amount);
             if(choice == 2 && acc instanceof CurrentAccount) acc.deposit(amount);
         }
+
+        TransactionType type = TransactionType.DEPOSIT;
+        String description = "Cash Deposit";
+
+        transactionService.addTransaction(new Transaction(type, new BigDecimal(amount), description));
     }
 
     public void withdraw(){
@@ -178,6 +196,11 @@ public class BankCLI {
             if(choice == 1 && acc instanceof SavingsAccount) acc.withdraw(amount);
             if(choice == 2 && acc instanceof CurrentAccount) acc.withdraw(amount);
         }
+
+        TransactionType type = TransactionType.WITHDRAWAL;
+        String description = "Cash Withdrawal";
+
+        transactionService.addTransaction(new Transaction(type, new BigDecimal(amount), description));
     }
 
     public void viewAccountDetails(){
@@ -227,9 +250,10 @@ public class BankCLI {
         }
     }
 
-    // public void viewTransactionHistory(){
-    //     return;
-    // }
+    public void viewTransactionHistory(){
+        System.out.println("Transactions: \n");
+        transactionService.viewTransactionHistory();
+    }
 
     // public void transfer(){
         

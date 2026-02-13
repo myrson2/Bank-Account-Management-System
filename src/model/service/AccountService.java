@@ -11,22 +11,27 @@ public class AccountService {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<Account> accounts = new ArrayList<>();
 
-    public void createUser(User user){
+    public User createUser(User user){
         users.add(user);
-
-        System.out.println("Done Adding.");
+        return user;
     }
 
-    public void openSavingsAccount(SavingsAccount savings){
+    public SavingsAccount openSavingsAccount(SavingsAccount savings){
         accounts.add(savings);
+        return savings;
     }
 
-    public void openCurrentAccount(CurrentAccount current){
+    public CurrentAccount openCurrentAccount(CurrentAccount current){
         accounts.add(current);
+        return current;
     }
 
     // getters 
     public ArrayList<Account> getAccounts() {
         return accounts;
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
     }
 }
