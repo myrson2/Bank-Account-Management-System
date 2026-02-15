@@ -3,10 +3,11 @@ package cli;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
+import exceptions.InvalidAccountException;
 import model.user.User;
+import service.AccountService;
+import service.TransactionService;
 import model.account.*;
-import model.service.AccountService;
-import model.service.TransactionService;
 import model.transaction.Transaction;
 import model.transaction.TransactionType;
 
@@ -75,8 +76,8 @@ public class BankCLI {
     }
 
     public static void openAccount(){
-
-        if(user == null) {
+        try{
+            if(user == null) {
             System.out.println("Create Account First");
             return;
         }
@@ -91,6 +92,10 @@ public class BankCLI {
         System.out.print("Select > ");
         int select = scanner.nextInt();
         scanner.nextLine();
+
+        if (select != 1 && select != 2) {
+                throw new InvalidAccountException("Invalid selection. Please choose 1 for Savings or 2 for Current.");
+            }
 
         for (Account acc  : accountService.getAccounts()) {
             if (select == 1 && acc instanceof SavingsAccount) {
@@ -149,58 +154,18 @@ public class BankCLI {
         TransactionType type = TransactionType.DEPOSIT;
 
         transactionService.addTransaction(new Transaction(type, new BigDecimal(initDeposit), description));
+
+        } catch(InvalidAccountException iae){
+            System.out.println("Error: " + iae.getMessage());
+        }
     }
 
     public static void deposit(){
-        System.out.print("Enter Amount: ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.printf("""
-               -- Account --
-               1. Savings Account
-               2. Current Account   
-            """);
-
-        System.out.print("Select: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        for (Account acc : accountService.getAccounts()) {
-            if(choice == 1 && acc instanceof SavingsAccount) acc.deposit(amount);
-            if(choice == 2 && acc instanceof CurrentAccount) acc.deposit(amount);
-        }
-
-        TransactionType type = TransactionType.DEPOSIT;
-        String description = "Cash Deposit";
-
-        transactionService.addTransaction(new Transaction(type, new BigDecimal(amount), description));
+        accountService.deposit();
     }
 
     public void withdraw(){
-         System.out.print("Enter Amount: ");
-        double amount = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.printf("""
-               -- Account --
-               1. Savings Account
-               2. Current Account   
-            """);
-
-        System.out.print("Select: ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-
-        for (Account acc : accountService.getAccounts()) {
-            if(choice == 1 && acc instanceof SavingsAccount) acc.withdraw(amount);
-            if(choice == 2 && acc instanceof CurrentAccount) acc.withdraw(amount);
-        }
-
-        TransactionType type = TransactionType.WITHDRAWAL;
-        String description = "Cash Withdrawal";
-
-        transactionService.addTransaction(new Transaction(type, new BigDecimal(amount), description));
+         accountService.withdraw();
     }
 
     public void viewAccountDetails(){

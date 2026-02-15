@@ -1,6 +1,8 @@
 package model.account;
 
 import java.math.BigDecimal;
+
+import exceptions.InsufficientFundsException;
 import model.user.User;
 
 public class SavingsAccount extends Account{
@@ -20,12 +22,11 @@ public class SavingsAccount extends Account{
     }
 
     @Override
-    public BigDecimal withdraw(double amount) {
+    public BigDecimal withdraw(double amount) throws InsufficientFundsException {
         BigDecimal withdraw = BigDecimal.valueOf(amount);
         
         if(balance.compareTo(withdraw) < 0){
-            System.out.println("Error...");
-            return null;
+            throw new InsufficientFundsException();
         }
 
         balance = balance.subtract(withdraw);

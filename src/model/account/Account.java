@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
+import exceptions.*;
 
 import model.transaction.Transaction;
 import model.user.User;
@@ -49,6 +50,6 @@ public abstract class Account {
     }
 
     public abstract BigDecimal deposit(double amount);
-    public abstract BigDecimal withdraw(double amount);
+    public abstract BigDecimal withdraw (double amount) throws InsufficientFundsException;
     public abstract BigDecimal getBalance();
 }

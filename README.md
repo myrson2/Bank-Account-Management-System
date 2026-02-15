@@ -257,11 +257,12 @@ Coordinates domain objects and enforces rules.
 
 Prevents illegal system states.
 
-| Exception                    | Trigger Condition                |
-| ---------------------------- | -------------------------------- |
-| `InsufficientFundsException` | Withdrawal exceeds allowed funds |
-| `InvalidAccountException`    | Account not found                |
-| `IllegalOperationException`  | Invalid business rule violation  |
+| Exception Name                 | Trigger Condition                                                  | TODOs / Requirements                                                                                                              |
+| ------------------------------ | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| **InsufficientFundsException** | Attempt to withdraw or transfer more funds than allowed in account | - Throw when withdrawal/transfer exceeds available balance<br>- Must carry a descriptive message<br>- Must be a checked exception |
+| **InvalidAccountException**    | Account number does not exist or cannot be found                   | - Throw when any account lookup fails<br>- Must carry a descriptive message<br>- Must be a checked exception                      |
+| **IllegalOperationException**  | Any business rule violation (e.g., negative deposit)               | - Throw when a business rule is violated<br>- Must carry a descriptive message<br>- Must be a checked exception                   |
+
 
 ---
 
